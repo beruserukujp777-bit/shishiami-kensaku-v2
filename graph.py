@@ -1,7 +1,7 @@
 """ドラフトに似た企画を探し、そこから線をたどる。
 
 ⭐ 図の「探す」のまん中の係。やることは 3 段。LLM は呼ばない。
-   ① 探す     … ドラフトと文章が似ている過去企画を出す（PROJECT ZERO W4 の ranking.py をそのまま使う）
+   ① 探す     … ドラフトと文章が似ている過去企画を出す（並べる計算は ranking_v2.py に任せる）
    ② たどる   … その企画から出ている線を追い、法令・システム・その担当者まで引き出す
    ③ まとめる … たどった道を、画面の表の形（1 システム 1 行、1 法令 1 行）にそろえる
 ⭐⭐ ②があるので、**ドラフトに一度も書かれていない語**が出てくる。
@@ -9,28 +9,16 @@
 """
 
 import database
-from ranking import SearchEngine
+import ranking_v2
 
 
 def nita_kikaku(draft: str, kikaku: list[dict], n: int = 3) -> list[dict]:
     """ドラフトに似た過去企画を、似ている順に n 件返す。本文（原文）も一緒に返す。
 
-    ⚠️ ranking.py には足切りがある（似ている度合いが 0.01 以下は出さない）。
+    ⚠️ ranking_v2.py には足切りがある（似ている度合いが 0.01 以下は出さない）。
        似た企画が 1 つも無いドラフトでは、n 件より少なく返ることがある。
     """
-    engine = SearchEngine()
-    engine.build_index(
-        [
-            # ranking.py は Web ページ用の項目を見にいく。企画書に無い項目は空で渡す。
-            {"title": k["title"], "description": "", "full_text": k["body"], "keywords": "",
-             "crawled_at": "", "word_count": len(k["body"]), "body": k["body"]}
-            for k in kikaku
-        ]
-    )
-    return [
-        {"title": p["title"], "body": p["body"], "score": p["relevance_score"] / 100}
-        for p in engine.search(draft, top_n=n)
-    ]
+    return ranking_v2.narabu(draft, kikaku, n)
 
 
 def tadoru(titles: list[str]) -> list[dict]:

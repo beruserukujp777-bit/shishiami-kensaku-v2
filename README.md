@@ -20,7 +20,7 @@ Claude API を呼ぶのは「しまう」のときだけ。「探す」は API �
 |---|---|
 | `app.py` | 画面（Streamlit）。ドラフトを受け取り、結果を出す |
 | `graph.py` | 似た企画を探し、線をたどり、表の形にまとめる |
-| `ranking.py` | TF-IDF で、似ている順に並べる |
+| `ranking_v2.py` | TF-IDF で、似ている順に並べる |
 | `zu.py` | たどった道を絵にする |
 | `loader.py` | `data/` の資料を読む |
 | `extract.py` | 企画書の文章から点と線を抜く（API を呼ぶ） |
