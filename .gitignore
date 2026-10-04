@@ -1,0 +1,11 @@
+# API キーを書くファイルは上げない
+.env
+.streamlit/secrets.toml
+
+# 動かすと自動でできるもの
+__pycache__/
+*.pyc
+export/
+
+# PowerPoint を開いている間だけできる一時ファイル
+~$*
